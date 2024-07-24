@@ -40,3 +40,5 @@ Icon
 /Win32/Debug
 /x64
 /Resource.aps
+/WinNTL-11_4_4/x64/Debug
+/WinNTL-11_4_4/x64/Release

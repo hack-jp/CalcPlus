@@ -84,11 +84,8 @@ HRESULT CalculatorApp::Initialize()
 
 		RegisterClassEx(&wcex);
 
-		FLOAT dpiX, dpiY;
-		m_pD2DFactory->GetDesktopDpi(&dpiX, &dpiY);
-
 		RECT rect;
-		SetRect(&rect, 0, 0, static_cast<UINT>(ceil(640.f * dpiX / 96.f)), static_cast<UINT>(ceil(280.f * dpiY / 96.f)));
+		SetRect(&rect, 0, 0, 640, 280);
 		AdjustWindowRect(&rect, WS_POPUP | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPCHILDREN, 0);
 
 		m_hwnd = CreateWindowEx(
@@ -170,7 +167,6 @@ HRESULT CalculatorApp::CreateDeviceResources()
 
 	if (!m_pRenderTarget)
 	{
-
 		RECT rc;
 		GetClientRect(m_hwnd, &rc);
 
@@ -181,7 +177,7 @@ HRESULT CalculatorApp::CreateDeviceResources()
 
 		// Create a Direct2D render target.
 		hr = m_pD2DFactory->CreateHwndRenderTarget(
-			D2D1::RenderTargetProperties(),
+			D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT, D2D1::PixelFormat(), 96.0f, 96.0f),
 			D2D1::HwndRenderTargetProperties(m_hwnd, size),
 			&m_pRenderTarget
 			);
@@ -198,7 +194,6 @@ HRESULT CalculatorApp::CreateDeviceResources()
 				&m_pDispBrush
 				);
 		}
-
 	}
 
 	return hr;
@@ -249,13 +244,6 @@ HRESULT CalculatorApp::OnRender()
 		m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 
 		m_pRenderTarget->Clear(BACKCOLOR);
-
-		//m_pRenderTarget->DrawLine(
-		//	D2D1::Point2F(static_cast<FLOAT>(0), 28.0f),
-		//	D2D1::Point2F(static_cast<FLOAT>(640), 28.0f),
-		//	m_pTextBrush,
-		//	20.0f
-		//	);
 
 		D2D1_RECT_F rectangle2 = D2D1::RectF(
 			0,
